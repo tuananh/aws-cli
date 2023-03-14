@@ -30,12 +30,19 @@ environment:
       - aws-c-sdkutils-dev@local
       - aws-checksums-dev@local
       - s2n-tls-dev@local
+      - git
 pipeline:
-  - uses: fetch
+  - uses: git-checkout
     with:
-      expected-sha512: a0244d238dc8b549f8f689e0078d54e4bbe4eaa39bdd4783bb396b0e33059549c87f2d730f23beb8bd6a10cb51cb54b57e3f0bf0f3df37303ec2432b073e5f02
-      uri: https://github.com/awslabs/aws-crt-cpp/archive/refs/tags/v${{package.version}}.tar.gz
+      repository: https://github.com/awslabs/aws-crt-cpp
+      tag: v${{package.version}}
+      expected-commit: d9ca0e08505d96116b1018f7e2fd60a2e06a01e3
+      destination: aws-crt-cpp
   - runs: |
+      cd aws-crt-cpp
+      git submodule update --init
+  - runs: |
+      cd aws-crt-cpp
       if [ "$CBUILD" != "$CHOST" ]; then
         CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
       fi
@@ -50,6 +57,7 @@ pipeline:
         $CMAKE_CROSSOPTS
       cmake --build build
   - runs: |
+      cd aws-crt-cpp
       DESTDIR="${{targets.destdir}}" cmake --install build
   - uses: strip
 subpackages:

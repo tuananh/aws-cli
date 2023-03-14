@@ -138,6 +138,14 @@ jobs:
           signing-key-path: ${{ github.workspace }}/melange.rsa
           archs: x86_64
 
+      - name: Build aws-crt-cpp pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-crt-cpp.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
       - uses: chainguard-images/actions/apko-publish@e61cb0631c83e84cadc21337be090ad06bf05da2
         id: apko
         with:
