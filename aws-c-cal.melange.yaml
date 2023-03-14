@@ -1,0 +1,52 @@
+package:
+  name: aws-c-cal
+  version: 0.5.21
+  epoch: 0
+  description: "AWS Crypto Abstraction Layer: Cross-Platform, C99 wrapper for cryptography primitives"
+  copyright:
+    - license: Apache-2.0
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+      - '@local ./packages'
+    packages:
+      - aws-c-common-dev@local
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - cmake
+      - openssl-dev
+      - samurai
+pipeline:
+  - uses: fetch
+    with:
+      expected-sha512: c344b2b5f5ab369de52642ee3709dcce2078252686985f1f98f22fc69d3aea0df9241f4f30eab0d70e8cd00877b874a83bd8496ae33336b98470714947792324
+      uri: https://github.com/awslabs/aws-c-cal/archive/refs/tags/v${{package.version}}.tar.gz
+  - runs: |
+      if [ "$CBUILD" != "$CHOST" ]; then
+        CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+      fi
+      CFLAGS="$CFLAGS -flto=auto" \
+      CXXFLAGS="$CXXFLAGS -flto=auto" \
+      cmake -B build -G Ninja \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+        -DBUILD_SHARED_LIBS=True \
+        -DCMAKE_BUILD_TYPE=None \
+        -DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
+        $CMAKE_CROSSOPTS
+      cmake --build build
+  - runs: |
+      DESTDIR="${{targets.destdir}}" cmake --install build
+  - uses: strip
+subpackages:
+  - name: aws-c-cal-dev
+    pipeline:
+      - uses: split/dev
+    dependencies:
+      runtime:
+        - aws-c-cal
+    description: aws-c-cal dev

@@ -1,0 +1,42 @@
+package:
+  name: py3-awscrt
+  version: 0.16.12
+  epoch: 0
+  description: Python bindings for the AWS Common Runtime
+  copyright:
+    - license: Apache-2.0
+  dependencies:
+    runtime:
+      - python3
+
+environment:
+  contents:
+    packages:
+      - wolfi-base
+      - busybox
+      - ca-certificates-bundle
+      - build-base
+      - python3
+      - py3-setuptools
+      - aws-crt-cpp-dev
+      - py3-gpep517
+      - py3-setuptools
+      - py3-wheel
+      - python3-dev
+      - samurai
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/awslabs/aws-crt-python/archive/refs/tags/v${{package.version}}.tar.gz
+      expected-sha512: 0309d75cd7e5fe423d6066656676b38652f54d6d96707901b87c6a6d6faa20f204a99b810cd765f9cc940eb5ace0400aeb1b95f8b192b4125b2d2c167656a00e
+  - runs: |
+      echo "__version__ = '$pkgver'" >> awscrt/__init__.py
+      # dynlink
+      sed -i '/:lib/d' setup.py
+      gpep517 build-wheel \
+              --wheel-dir dist \
+              --output-fd 3 3>&1 >&2
+      python3 -m venv --clear --without-pip --system-site-packages testenv
+      testenv/bin/python3 -m installer -d "${{targets.destdir}}" dist/*.whl
+  - uses: strip

@@ -1,0 +1,45 @@
+package:
+  name: aws-c-auth
+  version: 0.6.25
+  epoch: 0
+  description: "C99 library implementation of AWS client-side authentication: standard credentials providers and signing"
+  copyright:
+    - license: Apache-2.0
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+      - '@local ./packages'
+    packages:
+      - busybox
+      - ca-certificates-bundle
+      - build-base
+      - cmake
+      - samurai
+      - aws-c-cal-dev@local
+      - aws-c-common-dev@local
+      - aws-c-compression-dev@local
+      - aws-c-http-dev
+      - aws-c-io-dev
+      - aws-c-sdkutils-dev
+      - openssl-dev
+      - s2n-tls-dev
+pipeline:
+  - uses: fetch
+    with:
+      expected-sha512: af598109129409f0cff2a237ed06b0951c7a35d270ea62f34714cd5446dd9868da779894cb9a2b2aac326b3f0d92cf9e05f9bc404d0ee3a1723c494d8eaeaed5
+      uri: https://github.com/awslabs/aws-c-auth/archive/refs/tags/v${{package.version}}.tar.gz
+  - uses: cmake/configure
+  - uses: cmake/build
+  - uses: cmake/install
+  - uses: strip
+subpackages:
+  - name: aws-c-auth-dev
+    pipeline:
+      - uses: split/dev
+    dependencies:
+      runtime:
+        - aws-c-auth
+    description: aws-c-auth dev

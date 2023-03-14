@@ -1,0 +1,55 @@
+package:
+  name: aws-c-http
+  version: 0.7.5
+  epoch: 0
+  description: AWS C99 implementation of the HTTP/1.1 and HTTP/2 specifications
+  copyright:
+    - license: Apache-2.0
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+      - '@local ./packages'
+    packages:
+      - aws-c-cal-dev@local
+      - aws-c-common-dev@local
+      - aws-c-compression-dev@local
+      - aws-c-io-dev@local
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - cmake
+      - s2n-tls-dev
+      - samurai
+pipeline:
+  - uses: fetch
+    with:
+      expected-sha512: 90bfd0abfce8727bd4ef6e9a016e6183c2c4349c2d6e4cc02b932f5109ceb3476d79b853e74ca4888b768f44eba9ae953ca5e9b900704a2a3370a200c0168c02
+      uri: https://github.com/awslabs/aws-c-http/archive/refs/tags/v${{package.version}}.tar.gz
+  - runs: |
+      if [ "$CBUILD" != "$CHOST" ]; then
+        CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+      fi
+      CFLAGS="$CFLAGS -flto=auto" \
+      CXXFLAGS="$CXXFLAGS -flto=auto" \
+      cmake -B build -G Ninja \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+        -DBUILD_SHARED_LIBS=True \
+        -DCMAKE_BUILD_TYPE=None \
+        -DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
+        $CMAKE_CROSSOPTS
+      cmake --build build
+  - runs: |
+      DESTDIR="${{targets.destdir}}" cmake --install build
+  - uses: strip
+subpackages:
+  - name: aws-c-http-dev
+    pipeline:
+      - uses: split/dev
+      - runs: |
+          mkdir -p "${{targets.subpkgdir}}"/usr/lib
+          mv "${{targets.destdir}}"/usr/lib/aws-c-http "${{targets.subpkgdir}}"/usr/lib/
+    description: aws-c-http dev
