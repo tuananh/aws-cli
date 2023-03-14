@@ -21,24 +21,40 @@ environment:
       - aws-c-cal-dev@local
       - aws-c-common-dev@local
       - aws-c-compression-dev@local
-      - aws-c-http-dev
-      - aws-c-io-dev
-      - aws-c-sdkutils-dev
+      - aws-c-http-dev@local
+      - aws-c-io-dev@local
+      - aws-c-sdkutils-dev@local
       - openssl-dev
-      - s2n-tls-dev
+      - s2n-tls-dev@local
 pipeline:
   - uses: fetch
     with:
       expected-sha512: af598109129409f0cff2a237ed06b0951c7a35d270ea62f34714cd5446dd9868da779894cb9a2b2aac326b3f0d92cf9e05f9bc404d0ee3a1723c494d8eaeaed5
       uri: https://github.com/awslabs/aws-c-auth/archive/refs/tags/v${{package.version}}.tar.gz
-  - uses: cmake/configure
-  - uses: cmake/build
-  - uses: cmake/install
+  - runs: |
+      if [ "$CBUILD" != "$CHOST" ]; then
+        CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+      fi
+      CFLAGS="$CFLAGS -flto=auto" \
+      CXXFLAGS="$CXXFLAGS -flto=auto" \
+      cmake -B build -G Ninja \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+        -DBUILD_SHARED_LIBS=True \
+        -DCMAKE_BUILD_TYPE=None \
+        -DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
+        $CMAKE_CROSSOPTS
+      cmake --build build
+  - runs: |
+      DESTDIR="${{targets.destdir}}" cmake --install build
   - uses: strip
 subpackages:
   - name: aws-c-auth-dev
     pipeline:
       - uses: split/dev
+      - runs: |
+          mkdir -p "${{targets.subpkgdir}}"/usr/lib
+          mv "${{targets.destdir}}"/usr/lib/aws-c-auth "${{targets.subpkgdir}}"/usr/lib/
     dependencies:
       runtime:
         - aws-c-auth

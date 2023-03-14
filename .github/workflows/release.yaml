@@ -50,6 +50,22 @@ jobs:
           signing-key-path: ${{ github.workspace }}/melange.rsa
           archs: x86_64
 
+      - name: Build aws-checksums pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-checksums.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build aws-c-sdkutils pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-sdkutils.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
       - name: Build s2n-tls pkg
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:
@@ -86,6 +102,38 @@ jobs:
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:
           config: aws-c-http.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build aws-c-mqtt pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-mqtt.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+          
+      - name: Build aws-c-auth pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-auth.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build aws-c-event-stream pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-event-stream.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+          
+      - name: Build aws-c-s3 pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-s3.melange.yaml
           sign-with-key: true
           signing-key-path: ${{ github.workspace }}/melange.rsa
           archs: x86_64

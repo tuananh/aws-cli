@@ -1,8 +1,8 @@
 package:
-  name: aws-c-common
-  version: 0.8.14
+  name: aws-c-event-stream
+  version: 0.2.20
   epoch: 0
-  description: Core c99 package for AWS SDK for C including cross-platform primitives, configuration, data structures, and error handling
+  description: AWS C99 implementation of the vnd.amazon.eventstream content-type
   copyright:
     - license: Apache-2.0
 environment:
@@ -11,19 +11,24 @@ environment:
       - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
     repositories:
       - https://packages.wolfi.dev/os
+      - '@local ./packages'
     packages:
+      - aws-c-cal-dev@local
+      - aws-c-common-dev@local
+      - aws-c-io-dev@local
+      - aws-checksums-dev@local
+      - s2n-tls-dev@local
+      - build-base
       - busybox
       - ca-certificates-bundle
-      - build-base
       - cmake
+      - openssl-dev
       - samurai
-      - cmake
-      - python3-dev
 pipeline:
   - uses: fetch
     with:
-      expected-sha512: 221ff2d8e058ca1586c41d9b4e807c75fe2ef824112bca25428b327f35018a61f9d6f152a730f0214c85afcb604de58a928f19f9b78edb106414ef176bd6dcdd
-      uri: https://github.com/awslabs/aws-c-common/archive/refs/tags/v${{package.version}}.tar.gz
+      expected-sha512: 3263d5fb8cf99fb0ff307d7d22c4e550a19df9f37d9d329a18d5a45d16148ac9b0e94d19e1f8ff77101daee85b189e841181acb4fd0d3a29bf7ece127abb6c00
+      uri: https://github.com/awslabs/aws-c-event-stream/archive/refs/tags/v${{package.version}}.tar.gz
   - runs: |
       if [ "$CBUILD" != "$CHOST" ]; then
         CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
@@ -32,7 +37,7 @@ pipeline:
       CXXFLAGS="$CXXFLAGS -flto=auto" \
       cmake -B build -G Ninja \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
         -DBUILD_SHARED_LIBS=True \
         -DCMAKE_BUILD_TYPE=None \
         -DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
@@ -42,13 +47,13 @@ pipeline:
       DESTDIR="${{targets.destdir}}" cmake --install build
   - uses: strip
 subpackages:
-  - name: aws-c-common-dev
+  - name: aws-c-event-stream-dev
     pipeline:
       - uses: split/dev
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/lib
-          mv "${{targets.destdir}}"/usr/lib/aws-c-common "${{targets.subpkgdir}}"/usr/lib/
+          mv "${{targets.destdir}}"/usr/lib/aws-c-event-stream "${{targets.subpkgdir}}"/usr/lib/
     dependencies:
       runtime:
-        - aws-c-common
-    description: aws-c-common dev
+        - aws-c-event-stream
+    description: aws-c-event-stream dev

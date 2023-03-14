@@ -21,7 +21,7 @@ environment:
       - busybox
       - ca-certificates-bundle
       - cmake
-      - s2n-tls-dev
+      - s2n-tls-dev@local
       - samurai
 pipeline:
   - uses: fetch
@@ -52,4 +52,7 @@ subpackages:
       - runs: |
           mkdir -p "${{targets.subpkgdir}}"/usr/lib
           mv "${{targets.destdir}}"/usr/lib/aws-c-http "${{targets.subpkgdir}}"/usr/lib/
+    dependencies:
+      runtime:
+        - aws-c-http
     description: aws-c-http dev

@@ -55,4 +55,5 @@ subpackages:
     dependencies:
       runtime:
         - openssl-dev
+        - aws-c-io
     description: aws-c-io dev

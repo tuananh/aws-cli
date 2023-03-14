@@ -46,6 +46,9 @@ subpackages:
   - name: aws-c-cal-dev
     pipeline:
       - uses: split/dev
+      - runs: |
+          mkdir -p "${{targets.subpkgdir}}"/usr/lib
+          mv "${{targets.destdir}}"/usr/lib/aws-c-cal "${{targets.subpkgdir}}"/usr/lib/
     dependencies:
       runtime:
         - aws-c-cal

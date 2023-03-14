@@ -2,31 +2,64 @@ package:
   name: aws-crt-cpp
   version: 0.19.8
   epoch: 0
-  description: C++ wrapper around the aws-c-* libraries. Provides Cross-Platform Transport Protocols and SSL/TLS implementations for C++
+  description: "C++ wrapper around the aws-c-* libraries. Provides Cross-Platform Transport Protocols and SSL/TLS implementations for C++"
   copyright:
     - license: Apache-2.0
 environment:
   contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+      - '@local ./packages'
     packages:
       - busybox
       - ca-certificates-bundle
       - build-base
       - cmake
       - samurai
+      - aws-c-auth-dev@local
+      - aws-c-cal-dev@local
+      - aws-c-common-dev@local
+      - aws-c-compression-dev@local
+      - aws-c-event-stream-dev@local
+      - aws-c-http-dev@local
+      - aws-c-io-dev@local
+      - aws-c-mqtt-dev@local
+      - aws-c-s3-dev@local
+      - aws-c-sdkutils-dev@local
+      - aws-checksums-dev@local
+      - s2n-tls-dev@local
 pipeline:
   - uses: fetch
     with:
-      expected-sha256: 5308fd4bd90cef7aa060558514de6a1a4a0819974a26e6ed13973c5f624c24b2
-      uri: https://github.com/DaveGamble/cJSON/archive/v${{package.version}}.tar.gz
-  - uses: cmake/configure
-  - uses: cmake/build
-  - uses: cmake/install
+      expected-sha512: a0244d238dc8b549f8f689e0078d54e4bbe4eaa39bdd4783bb396b0e33059549c87f2d730f23beb8bd6a10cb51cb54b57e3f0bf0f3df37303ec2432b073e5f02
+      uri: https://github.com/awslabs/aws-crt-cpp/archive/refs/tags/v${{package.version}}.tar.gz
+  - runs: |
+      if [ "$CBUILD" != "$CHOST" ]; then
+        CMAKE_CROSSOPTS="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_HOST_SYSTEM_NAME=Linux"
+      fi
+      CFLAGS="$CFLAGS -flto=auto" \
+      CXXFLAGS="$CXXFLAGS -flto=auto" \
+      cmake -B build -G Ninja \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+        -DBUILD_SHARED_LIBS=True \
+        -DCMAKE_BUILD_TYPE=None \
+        -DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
+        $CMAKE_CROSSOPTS
+      cmake --build build
+  - runs: |
+      DESTDIR="${{targets.destdir}}" cmake --install build
   - uses: strip
 subpackages:
-  - name: cjson-dev
+  - name: aws-crt-cpp-dev
     pipeline:
       - uses: split/dev
+      - runs: |
+          mkdir -p "${{targets.subpkgdir}}"/usr/lib
+          mv "${{targets.destdir}}"/usr/lib/aws-crt-cpp "${{targets.subpkgdir}}"/usr/lib/
     dependencies:
       runtime:
-        - cjson
-    description: cjson dev
+        - aws-crt-cpp
+    description: aws-crt-cpp dev
