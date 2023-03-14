@@ -15,7 +15,9 @@ aws ...
 This image is signed with [cosign](https://github.com/sigstore/cosign). To verify, download cosign and run
 
 ```sh
-cosign verify ghcr.io/tuananh/aws-cli:latest --certificate-oidc-issuer https://token.actions.githubusercontent.com --certificate-identity https://github.com/tuananh/aws-cli/.github/workflows/release.yaml@refs/heads/main
+cosign verify ghcr.io/tuananh/aws-cli:latest \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  --certificate-identity https://github.com/tuananh/aws-cli/.github/workflows/release.yaml@refs/heads/main
 ```
 
 Output
