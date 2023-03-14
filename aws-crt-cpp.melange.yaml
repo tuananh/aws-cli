@@ -48,17 +48,19 @@ pipeline:
       fi
       CFLAGS="$CFLAGS -flto=auto" \
       CXXFLAGS="$CXXFLAGS -flto=auto" \
-      cmake -B build -G Ninja \
+      cmake -B build -G Ninja\
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=/usr/lib \
         -DBUILD_SHARED_LIBS=True \
         -DCMAKE_BUILD_TYPE=None \
+        -DBUILD_DEPS=False \
         -DBUILD_TESTING="$(want_check && echo ON || echo OFF)" \
         $CMAKE_CROSSOPTS
       cmake --build build
   - runs: |
       cd aws-crt-cpp
       DESTDIR="${{targets.destdir}}" cmake --install build
+      rm -rf "${{targets.destdir}}"/usr/bin/
   - uses: strip
 subpackages:
   - name: aws-crt-cpp-dev
@@ -70,4 +72,16 @@ subpackages:
     dependencies:
       runtime:
         - aws-crt-cpp
+        - aws-c-auth-dev
+        - aws-c-cal-dev
+        - aws-c-common-dev
+        - aws-c-compression-dev
+        - aws-c-event-stream-dev
+        - aws-c-http-dev
+        - aws-c-io-dev
+        - aws-c-mqtt-dev
+        - aws-c-s3-dev
+        - aws-c-sdkutils-dev
+        - aws-checksums-dev
+        - s2n-tls-dev
     description: aws-crt-cpp dev
