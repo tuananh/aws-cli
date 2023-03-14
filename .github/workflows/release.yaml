@@ -39,6 +39,56 @@ jobs:
         run: sudo apt-get install -y qemu-user
 
       - uses: sigstore/cosign-installer@main
+      - uses: chainguard-dev/actions/setup-melange@main
+      - uses: chainguard-dev/actions/melange-keygen@main
+
+      - name: Build aws-c-common pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-common.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build s2n-tls pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: s2n-tls.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build aws-c-cal pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-cal.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build aws-c-compression pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-compression.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build aws-c-io pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-io.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build aws-c-http pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-c-http.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
 
       - uses: chainguard-images/actions/apko-publish@e61cb0631c83e84cadc21337be090ad06bf05da2
         id: apko
