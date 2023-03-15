@@ -71,7 +71,6 @@ subpackages:
           mv "${{targets.destdir}}"/usr/lib/aws-crt-cpp "${{targets.subpkgdir}}"/usr/lib/
     dependencies:
       runtime:
-        - aws-crt-cpp
         - aws-c-auth-dev
         - aws-c-cal-dev
         - aws-c-common-dev
@@ -83,5 +82,6 @@ subpackages:
         - aws-c-s3-dev
         - aws-c-sdkutils-dev
         - aws-checksums-dev
+        - aws-crt-cpp
         - s2n-tls-dev
     description: aws-crt-cpp dev
