@@ -5,6 +5,15 @@ package:
   description: "AWS C99 library implementation for communicating with the S3 service"
   copyright:
     - license: Apache-2.0
+  dependencies:
+    runtime:
+      - aws-c-auth
+      - aws-c-cal
+      - aws-c-common
+      - aws-c-http
+      - aws-c-io
+      - aws-checksums
+
 environment:
   contents:
     keyring:
@@ -13,11 +22,6 @@ environment:
       - https://packages.wolfi.dev/os
       - '@local ./packages'
     packages:
-      - build-base
-      - busybox
-      - ca-certificates-bundle
-      - cmake
-      - samurai
       - aws-c-auth-dev@local
       - aws-c-cal-dev@local
       - aws-c-common-dev@local
@@ -26,8 +30,13 @@ environment:
       - aws-c-io-dev@local
       - aws-c-sdkutils-dev@local
       - aws-checksums-dev@local
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - cmake
       - curl-dev
       - s2n-tls-dev@local
+      - samurai
 pipeline:
   - uses: fetch
     with:
