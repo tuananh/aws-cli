@@ -22,12 +22,12 @@ environment:
       - busybox
       - ca-certificates-bundle
       - py3-gpep517
+      - py3-installer
       - py3-setuptools
-      # - py3-wheel
       - python3
       - python3-dev
-      - samurai
       - wolfi-base
+      - samurai
 
 pipeline:
   - uses: fetch
@@ -35,12 +35,7 @@ pipeline:
       uri: https://github.com/awslabs/aws-crt-python/archive/refs/tags/v${{package.version}}.tar.gz
       expected-sha512: 0309d75cd7e5fe423d6066656676b38652f54d6d96707901b87c6a6d6faa20f204a99b810cd765f9cc940eb5ace0400aeb1b95f8b192b4125b2d2c167656a00e
   - runs: |
-      echo "__version__ = '$pkgver'" >> awscrt/__init__.py
-      # dynlink
+      echo "__version__ = '${{package.version}}'" >> awscrt/__init__.py
       sed -i '/:lib/d' setup.py
-      python3 -m gpep517 build-wheel \
-              --wheel-dir dist \
-              --output-fd 3 3>&1 >&2
-      python3 -m venv --clear --without-pip --system-site-packages testenv
-      testenv/bin/python3 -m installer -d "${{targets.destdir}}" dist/*.whl
+      python3 setup.py install --prefix=${{targets.destdir}}/usr/local
   - uses: strip

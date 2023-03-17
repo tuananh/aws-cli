@@ -2,7 +2,7 @@
 
 # aws-cli
 
-A secure, Wolfi-based aws-cli container image.
+A tiny & secure Wolfi-based aws-cli container image.
 
 ## Usage
 
