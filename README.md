@@ -2,12 +2,13 @@
 
 # aws-cli
 
-> The missing official aws-cli v2 container image
+A secure, Wolfi-based aws-cli container image.
 
 ## Usage
 
 ```bash
-aws ...
+$ docker run --rm -it tuananh/aws-cli help
+$ docker run --rm -ti -v ~/.aws:/root/.aws tuananh/aws-cli s3 ls
 ```
 
 ## Signing
