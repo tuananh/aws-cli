@@ -1,0 +1,35 @@
+package:
+  name: py3-certifi
+  version: 2022.12.7
+  epoch: 0
+  description: Python3 package for providing Mozilla's CA Bundle
+  copyright:
+    - license: MPL-2.0
+  dependencies:
+    runtime:
+      - python3
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - py3-setuptools
+      - python3
+      - wolfi-base
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://files.pythonhosted.org/packages/source/c/certifi/certifi-${{package.version}}.tar.gz
+      expected-sha512: fd08b6bf138aa1b0a47909077642713d80f036e4b18de2c7f236a185521db3d6498a81a60b150124cc4bc21dd7e687badad4324a898117060c9e4ec93dfbdbe8
+  - runs: |
+      python3 setup.py build
+      python3 setup.py install --skip-build --root="${{targets.destdir}}"
+      rm -f "${{targets.destdir}}"/usr/lib/python3*/site-packages/certifi/cacert.pem
+  - uses: strip

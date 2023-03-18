@@ -42,6 +42,39 @@ jobs:
       - uses: chainguard-dev/actions/setup-melange@main
       - uses: chainguard-dev/actions/melange-keygen@main
 
+      - name: Build py3-certifi pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-certifi.melange.yaml
+          source-dir: py3-certifi
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-distro pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-distro.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-ruamel pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-ruamel.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-prompt_toolkit pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-prompt_toolkit.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
       - name: Build aws-c-common pkg
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:

@@ -37,5 +37,6 @@ pipeline:
   - runs: |
       echo "__version__ = '${{package.version}}'" >> awscrt/__init__.py
       sed -i '/:lib/d' setup.py
-      python3 setup.py install --prefix=${{targets.destdir}}/usr/local
+      python3 setup.py build
+      python3 setup.py install --skip-build --root="${{targets.destdir}}"
   - uses: strip

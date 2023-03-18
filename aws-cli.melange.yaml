@@ -1,6 +1,6 @@
 package:
   name: aws-cli
-  version: 2.11.3
+  version: 2.11.4
   epoch: 0
   description: Universal Command Line Interface for Amazon Web Services (v2)
   copyright:
@@ -26,24 +26,30 @@ environment:
       - python3
       - python3-dev
       - wolfi-base
-      # - py3-certifi
+      - py3-certifi@local
       - py3-dateutil
-      # - py3-distro
+      - py3-distro@local
       - py3-colorama
       - py3-docutils
       - py3-jmespath
       - py3-urllib3
-      # - py3-prompt_toolkit<3.0.37
-      # - py3-ruamel.yaml
+      - py3-prompt_toolkit@local
+      - py3-ruamel.yaml@local
+      - py3-pip
+      - openssl
 
 pipeline:
   - uses: fetch
     with:
-      uri: https://github.com/aws/aws-cli/archive/refs/tags/v${{package.version}}.tar.gz
-      expected-sha512: 5b8c2785f35c12f89976950dfa84cc579530d2d037fd666d24c4630d4468caad4543d0a5bc078c51491f1236615c3d990d390305efe1482d45221dae706a1743
+      uri: https://github.com/aws/aws-cli/archive/refs/tags/${{package.version}}.tar.gz
+      expected-sha256: 005a71054334d5bc4ab130feabbaed4099454d9d49b6c90285b392525e862676
   - uses: patch
     with:
       patches: fix-env.patch prompt-toolkit-3.0.29.patch tmpfile-index.patch
   - runs: |
-      python3 setup.py install --prefix=${{targets.destdir}}/usr/local
+      python3 -m pip install -r requirements-base.txt
+      backend="$(python3 -m gpep517 get-backend)"
+      python3 -m gpep517 build-wheel --wheel-dir dist --backend "$backend" --output-fd 1
+  - runs: |
+      python3 -m installer -d "${{targets.destdir}}" dist/*.whl
   - uses: strip

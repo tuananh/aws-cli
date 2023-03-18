@@ -1,0 +1,35 @@
+package:
+  name: py3-prompt_toolkit
+  version: 3.0.38
+  epoch: 0
+  description: Library for building powerful interactive command lines in Python
+  copyright:
+    - license: BSD-3-Clause
+  dependencies:
+    runtime:
+      - python3
+      # - py3-wcwidth
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - py3-setuptools
+      - python3
+      - wolfi-base
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/prompt-toolkit/python-prompt-toolkit/archive/refs/tags/${{package.version}}.tar.gz
+      expected-sha512: ffdcf300bc8b0f9d5dd074045dbc5ab3d7f1efab954a695724968f3529948578c7368b7284518b20ba02a744fe08464a46bf6e02bce9867a2dfa9821c4308b9f
+  - runs: |
+      python3 setup.py build
+      python3 setup.py install --skip-build --root="${{targets.destdir}}"
+  - uses: strip
