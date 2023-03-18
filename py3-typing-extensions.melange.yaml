@@ -1,0 +1,38 @@
+package:
+  name: py3-typing-extensions
+  version: 4.5.0
+  epoch: 0
+  description: Backported and Experimental Type Hints for Python 3.5+
+  copyright:
+    - license: Python-2.0
+  dependencies:
+    runtime:
+      - python3
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - py3-setuptools
+      - python3
+      - wolfi-base
+      - py3-gpep517
+      - py3-flit-core
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/python/typing_extensions/archive/${{package.version}}/typing_extensions-${{package.version}}.tar.gz
+      expected-sha512: 29369da83cdca57aba7d8c2089c77ad265eeb614fd34056f678e6dc9374558d1059ff2c514326115734fadbcad27ec98e1e5fcec087022a9d838cc2bfd1fe825
+  - runs: |
+      backend="$(python3 -m gpep517 get-backend)"
+      python3 -m gpep517 build-wheel --wheel-dir dist --backend "$backend" --output-fd 1
+  - runs: |
+      python3 -m installer -d "${{targets.destdir}}" dist/*.whl
+  - uses: strip

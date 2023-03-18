@@ -1,14 +1,13 @@
 package:
-  name: py3-prompt_toolkit
-  version: 3.0.38
+  name: py3-wcwidth
+  version: 0.2.6
   epoch: 0
-  description: Library for building powerful interactive command lines in Python
+  description: Measures number of Terminal column cells of wide-character codes
   copyright:
-    - license: BSD-3-Clause
+    - license: MIT
   dependencies:
     runtime:
       - python3
-      - py3-wcwidth
 
 environment:
   contents:
@@ -27,9 +26,10 @@ environment:
 pipeline:
   - uses: fetch
     with:
-      uri: https://github.com/prompt-toolkit/python-prompt-toolkit/archive/refs/tags/${{package.version}}.tar.gz
-      expected-sha512: ffdcf300bc8b0f9d5dd074045dbc5ab3d7f1efab954a695724968f3529948578c7368b7284518b20ba02a744fe08464a46bf6e02bce9867a2dfa9821c4308b9f
+      uri: https://files.pythonhosted.org/packages/source/w/wcwidth/wcwidth-${{package.version}}.tar.gz
+      expected-sha512: 0f7be2fcf0a2ef1c357fb3d1f7041a309443c8c771973aaf3acb7d83acee9fababa7f17dabc886a37d20bfc7dc13e8b0ce18637f4137ab349c881697e18c3a1c
   - runs: |
       python3 setup.py build
       python3 setup.py install --skip-build --root="${{targets.destdir}}"
+      rm -f "${{targets.destdir}}"/usr/lib/python3*/site-packages/certifi/cacert.pem
   - uses: strip

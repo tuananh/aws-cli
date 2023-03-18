@@ -37,6 +37,9 @@ environment:
       - py3-ruamel.yaml@local
       - py3-pip
       - openssl
+      - py3-wcwidth@local # TODO: figure out why we need to declare need it here?? py3-prompt_toolkit suppose to pull it in?
+      - py3-cryptography@local
+      - py3-typing-extensions@local # ???
 
 pipeline:
   - uses: fetch
@@ -47,7 +50,7 @@ pipeline:
     with:
       patches: fix-env.patch prompt-toolkit-3.0.29.patch tmpfile-index.patch
   - runs: |
-      python3 -m pip install -r requirements-base.txt
+      python3 -m pip install -r requirements.txt
       backend="$(python3 -m gpep517 get-backend)"
       python3 -m gpep517 build-wheel --wheel-dir dist --backend "$backend" --output-fd 1
   - runs: |

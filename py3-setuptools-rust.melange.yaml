@@ -1,0 +1,38 @@
+package:
+  name: py3-setuptools-rust
+  version: 1.5.2
+  epoch: 0
+  description: Setuptools plugin for rust support
+  copyright:
+    - license: MIT
+  dependencies:
+    runtime:
+      - python3
+      - rust # rust pkg in wolfi already has cargo. maybe submit a PR in wolfi to split it out??
+      - py3-semantic-version
+      - py3-typing-extensions
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - py3-setuptools
+      - python3
+      - wolfi-base
+      # - py3-setuptools_scm@local
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/PyO3/setuptools-rust/archive/refs/tags/v${{package.version}}.tar.gz
+      expected-sha512: e80d1296fd09c24b644d821e981261153ff19ae62d978fc8ee81c78e440d215f9d1e91e33d758effb94fcb64985937445940f2e2f032ad1b8c2aa39be79cf19d
+  - runs: |
+      python3 setup.py build
+      python3 setup.py install --skip-build --root="${{targets.destdir}}"
+  - uses: strip
