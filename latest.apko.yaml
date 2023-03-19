@@ -8,6 +8,21 @@ contents:
     - wolfi-baselayout
     - busybox
     - aws-cli@local
+     # should fix this as aws-cli runtime deps but i just want to quickly test this
+    - py3-distro@local
+    - py3-awscrt@local
+    - py3-certifi@local
+    - py3-cryptography@local
+    - py3-dateutil
+    - py3-distro@local
+    - py3-colorama
+    - py3-docutils
+    - py3-jmespath
+    - py3-urllib3
+    - py3-prompt_toolkit@local
+    - py3-ruamel.yaml@local
+    - py3-wcwidth@local
+    - openssl
 
 accounts:
   groups:
