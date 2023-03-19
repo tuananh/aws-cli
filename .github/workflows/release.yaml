@@ -75,6 +75,62 @@ jobs:
           signing-key-path: ${{ github.workspace }}/melange.rsa
           archs: x86_64
 
+      - name: Build py3-wcwidth pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-wcwidth.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-typing-extensions pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-typing-extensions.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-semantic-version pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-semantic-version.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-setuptools-rust pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-setuptools-rust.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-cffi pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-cffi.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-cparser pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-cparser.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-cryptography pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-cryptography.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
       - name: Build aws-c-common pkg
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:
@@ -183,6 +239,15 @@ jobs:
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:
           config: py3-awscrt.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build aws-cli pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: aws-cli.melange.yaml
+          source-dir: aws-cli
           sign-with-key: true
           signing-key-path: ${{ github.workspace }}/melange.rsa
           archs: x86_64

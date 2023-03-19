@@ -1,0 +1,34 @@
+package:
+  name: py3-cparser
+  version: 2.21
+  epoch: 0
+  description: C parser written in Python3
+  copyright:
+    - license: MIT
+  dependencies:
+    runtime:
+      - python3
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - py3-setuptools
+      - python3
+      - wolfi-base
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://files.pythonhosted.org/packages/source/p/pycparser/pycparser-${{package.version}}.tar.gz
+      expected-sha512: e61fbdde484d1cf74d4b27bdde40cf2da4b7028ca8ecd37c83d77473dab707d457321aecaf97da3b114c1d58a4eb200290b76f9c958044b57e5fed949895b5f0
+  - runs: |
+      python3 setup.py build
+      python3 setup.py install --skip-build --root="${{targets.destdir}}"
+  - uses: strip

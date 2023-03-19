@@ -28,6 +28,9 @@ environment:
       - libffi-dev
       - openssl-dev
       - py3-setuptools-rust@local
+      - py3-typing-extensions@local
+      - py3-semantic-version@local
+      - py3-cffi@local
 
 pipeline:
   - uses: fetch

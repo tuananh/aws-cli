@@ -3,10 +3,11 @@ contents:
     - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
   repositories:
     - https://packages.wolfi.dev/os
+    - '@local ./packages'
   packages:
     - wolfi-baselayout
     - busybox
-    - aws-cli
+    - aws-cli@local
 
 accounts:
   groups:
@@ -23,4 +24,4 @@ entrypoint:
 
 archs:
 - amd64
-- arm64
+# - arm64
