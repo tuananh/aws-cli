@@ -40,19 +40,16 @@ environment:
       - py3-wcwidth@local # TODO: figure out why we need to declare need it here?? py3-prompt_toolkit suppose to pull it in?
       - py3-cryptography@local
       - py3-typing-extensions@local # ???
+      - py3-flit-core
 
 pipeline:
   - uses: fetch
     with:
       uri: https://github.com/aws/aws-cli/archive/refs/tags/${{package.version}}.tar.gz
       expected-sha256: 005a71054334d5bc4ab130feabbaed4099454d9d49b6c90285b392525e862676
-  - uses: patch
-    with:
-      patches: fix-env.patch prompt-toolkit-3.0.29.patch tmpfile-index.patch
   - runs: |
-      python3 -m pip install -r requirements.txt
       backend="$(python3 -m gpep517 get-backend)"
-      python3 -m gpep517 build-wheel --wheel-dir dist --backend "$backend" --output-fd 1
+      python3 -m gpep517 build-wheel --wheel-dir dist --backend "$backend" --output-fd 3 3>&1 >&2
   - runs: |
       python3 -m installer -d "${{targets.destdir}}" dist/*.whl
   - uses: strip
