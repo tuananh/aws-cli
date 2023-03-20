@@ -23,6 +23,7 @@ contents:
     - py3-ruamel.yaml@local
     - py3-wcwidth@local
     - openssl
+    - ca-certificates-bundle
 
 accounts:
   groups:
