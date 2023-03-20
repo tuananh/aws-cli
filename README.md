@@ -7,8 +7,8 @@ A tiny & secure Wolfi-based aws-cli container image.
 ## Usage
 
 ```bash
-$ docker run --rm -it ghcr.io/tuananh/aws-cli help
-$ docker run --rm -ti -v ~/.aws:/root/.aws ghcr.io/tuananh/aws-cli s3 ls
+$ docker run --rm -it ghcr.io/tuananh/aws-cli --help
+$ docker run --rm -ti -v ~/.aws:/home/nonroot/.aws ghcr.io/tuananh/aws-cli s3 ls
 ```
 
 ## Signing

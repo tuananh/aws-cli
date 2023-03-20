@@ -37,6 +37,7 @@ accounts:
 
 environment:
   AWS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+  HOME: /home/nonroot
 
 entrypoint:
   command: /usr/bin/aws
