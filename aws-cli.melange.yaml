@@ -67,8 +67,5 @@ pipeline:
       rm -rf ${{targets.destdir}}/usr/local/lib/aws-cli/awscli/examples/
       rm -rf ${{targets.destdir}}/usr/local/lib/aws-cli/awscli/docutils/
       rm -rf ${{targets.destdir}}/usr/local/lib/aws-cli/awscli/data/ac.index
-      find ${{targets.destdir}}/usr/local/lib/aws-cli/awscli/data -name completions-1*.json -delete
-      
-      cd ${{targets.destdir}}/usr/local/lib/aws-cli
-      for a in *.so*; do test -f ${{targets.destdir}}/lib/$a && rm $a; done
+      find ${{targets.destdir}}/usr/local/lib/aws-cli/awscli/data -name completions-1*.json -delete      
   - uses: strip
