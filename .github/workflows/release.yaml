@@ -67,6 +67,46 @@ jobs:
           signing-key-path: ${{ github.workspace }}/melange.rsa
           archs: x86_64
 
+      - name: Build py3-ruamel.yaml.clib pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-ruamel.yaml.clib.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+          
+      - name: Build py3-wheel pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-wheel.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-pyinstaller pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-pyinstaller.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-pyinstaller-hook-contrib pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-pyinstaller-hook-contrib.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
+      - name: Build py3-altgraph pkg
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: py3-altgraph.melange.yaml
+          sign-with-key: true
+          signing-key-path: ${{ github.workspace }}/melange.rsa
+          archs: x86_64
+
       - name: Build py3-prompt_toolkit pkg
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:

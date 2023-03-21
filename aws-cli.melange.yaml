@@ -35,12 +35,17 @@ environment:
       - py3-urllib3
       - py3-prompt_toolkit@local
       - py3-ruamel.yaml@local
-      - py3-pip
+      - py3-pip<=23.0.0
       - openssl
       - py3-wcwidth@local # TODO: figure out why we need to declare need it here?? py3-prompt_toolkit suppose to pull it in?
       - py3-cryptography@local
-      - py3-typing-extensions@local # ???
+      - py3-typing-extensions@local # ???\
+      - py3-ruamel.yaml.clib@local
+      - py3-pyinstaller@local
+      - py3-pyinstaller-hooks-contrib@local
+      - py3-altgraph@local
       - py3-flit-core
+      - posix-libc-utils # need ldd
 
 pipeline:
   - uses: fetch
@@ -48,8 +53,22 @@ pipeline:
       uri: https://github.com/aws/aws-cli/archive/refs/tags/${{package.version}}.tar.gz
       expected-sha256: 005a71054334d5bc4ab130feabbaed4099454d9d49b6c90285b392525e862676
   - runs: |
-      backend="$(python3 -m gpep517 get-backend)"
-      python3 -m gpep517 build-wheel --wheel-dir dist --backend "$backend" --output-fd 3 3>&1 >&2
+      ./configure --with-install-type=portable-exe
+  - uses: autoconf/make
+  - uses: autoconf/make-install
+  # TODO: fix wrong symlink
   - runs: |
-      python3 -m installer -d "${{targets.destdir}}" dist/*.whl
+      rm ${{targets.destdir}}/usr/local/bin/aws
+      rm ${{targets.destdir}}/usr/local/bin/aws_completer
+      ln -s /usr/local/lib/aws-cli/aws ${{targets.destdir}}/usr/local/bin/aws
+      ln -s /usr/local/lib/aws-cli/aws_completer ${{targets.destdir}}/usr/local/bin/aws_completer
+  # remove examples/completion, etc...
+  - runs: |
+      rm -rf ${{targets.destdir}}/usr/local/lib/aws-cli/awscli/examples/
+      rm -rf ${{targets.destdir}}/usr/local/lib/aws-cli/awscli/docutils/
+      rm -rf ${{targets.destdir}}/usr/local/lib/aws-cli/awscli/data/ac.index
+      find ${{targets.destdir}}/usr/local/lib/aws-cli/awscli/data -name completions-1*.json -delete
+      
+      cd ${{targets.destdir}}/usr/local/lib/aws-cli
+      for a in *.so*; do test -f ${{targets.destdir}}/lib/$a && rm $a; done
   - uses: strip
