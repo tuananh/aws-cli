@@ -13,7 +13,7 @@ $ docker run --rm -ti -v ~/.aws:/home/nonroot/.aws ghcr.io/tuananh/aws-cli s3 ls
 
 ## Why did I create this?
 
-- The official `amazon/aws-cli` image is rather big, sitting at 384MB as of this post. I would like to streamline the image. The result is this image which sits at *merely* 186MB, a 50% reduction. The image contains only what is necessary by `aws-cli`. Think of it like Google's [distroless](https://github.com/GoogleContainerTools/distroless).
+- The official `amazon/aws-cli` image is rather big, sitting at 384MB as of this post. I would like to streamline the image. The result is this image which sits at *merely* 154MB, a 60% reduction. The image contains only what is necessary by `aws-cli`. Think of it like Google's [distroless](https://github.com/GoogleContainerTools/distroless).
 
 - Better reproducibility. Personally, I'm not a big fan of [this style](https://github.com/aws/aws-cli/blob/v2/docker/Dockerfile). With apko, we can have everything fully-reproducible.
 
