@@ -1,6 +1,6 @@
 package:
   name: aws-cli
-  version: 2.11.4
+  version: 2.11.6
   epoch: 0
   description: Universal Command Line Interface for Amazon Web Services (v2)
   copyright:
@@ -51,7 +51,7 @@ pipeline:
   - uses: fetch
     with:
       uri: https://github.com/aws/aws-cli/archive/refs/tags/${{package.version}}.tar.gz
-      expected-sha256: 005a71054334d5bc4ab130feabbaed4099454d9d49b6c90285b392525e862676
+      expected-sha256: cf6150407d9224ad17a38e5f75eead9981d29cc8bd5d094ffdaafcc0a5ce6739
   - runs: |
       ./configure --with-install-type=portable-exe
   - uses: autoconf/make
